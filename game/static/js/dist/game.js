@@ -30,7 +30,8 @@ class AcGameMenu{
     add_listening_events(){
         let outer = this;
         this.$single_mode.click(function(){
-            console.log("single_mode");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multi_mode.click(function(){
             console.log("multi_mode");
@@ -39,11 +40,43 @@ class AcGameMenu{
             console.log("settings");
         });
     }
+    show(){     //显示menu界面
+        this.$menu.show();
+    }
+    hide(){     //关闭menu界面
+        this.$menu.hide();
+    }
+}
+class AcGamePlayground{
+    constructor(root){
+        this.root = root;
+        this.$playground = $(`<div>playground</div>`);
+        this.hide();
+        this.root.$ac_game.append(this.$playground);
+        this.start();
+    }
+    start(){
+
+    }
+    update(){
+
+    }
+    hide(){
+        this.$playground.hide();
+    }
+    show(){
+        this.$playground.show();
+    }
 }
 class AcGame{
     constructor(id){
         this.id = id;
         this.$ac_game = $('#' + id);
         this.menu = new AcGameMenu(this);
+        this.playground = new AcGamePlayground(this);
+        this.start();
+    }
+    start(){
+
     }
 }
