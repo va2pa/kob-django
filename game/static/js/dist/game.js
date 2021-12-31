@@ -107,8 +107,36 @@ class GameMap extends AcGameObject{
         this.render();
     }
     render(){
-        this.ctx.fillStyle = "rgba(0,0,0)";
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
         this.ctx.fillRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
+    }
+}
+class Player extends AcGameObject{
+    constructor(playground, x, y, radius, color, speed, is_me){
+        super();
+        this.playground = playground;
+        this.ctx = this.playground.game_map.ctx;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.speed = speed;
+        this.is_me = is_me;
+        this.eps = 0.1;
+    }
+
+    start(){
+    }
+
+    update(){
+        this.render();
+    }
+
+    render(){
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.ctx.fillStyle = this.color;
+        this.ctx.fill();
     }
 }
 class AcGamePlayground{
@@ -120,6 +148,8 @@ class AcGamePlayground{
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
+        this.players = [];
+        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
 
         this.start();
     }
