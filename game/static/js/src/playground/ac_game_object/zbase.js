@@ -16,7 +16,7 @@ class AcGameObject{
     destroy(){      //删除该物体
         this.on_destroy();
 
-        for(int i = 0;i < AC_GAME_OBJECTS.length;i++){
+        for(let i = 0;i < AC_GAME_OBJECTS.length;i++){
             if(AC_GAME_OBJECTS[i] === this){
                 AC_GAME_OBJECTS.splice(i,1);
                 break;
@@ -27,7 +27,7 @@ class AcGameObject{
 
 let last_timestamp;
 let AC_GAME_ANIMATION = function(timestamp){
-    for(int i = 0;i < AC_GAME_OBJECTS.length;i++){
+    for(let i = 0;i < AC_GAME_OBJECTS.length;i++){
         let obj = AC_GAME_OBJECTS[i];
         if(!obj.has_called_start){
             obj.start();
