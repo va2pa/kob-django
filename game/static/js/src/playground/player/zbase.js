@@ -63,15 +63,7 @@ class Player extends AcGameObject{
         new Fireball(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, this.playground.height * 0.01);
     }
     be_attacked(angle, damage){
-        this.radius -= damage;
-        if(this.radius < 10){
-            this.destroy();
-            return false;
-        }
-        this.damage_x = Math.cos(angle);
-        this.damage_y = Math.sin(angle);
-        this.damage_speed = damage * 80;
-        this.speed *= 0.9;
+        //提到前面，最后一击也有粒子效果
         for(let i = 0;i < 20 + Math.random() * 10;i++){
             let x = this.x, y = this.y;
             let radius = this.radius * Math.random() * 0.1;
@@ -82,6 +74,15 @@ class Player extends AcGameObject{
             let move_length = this.radius * Math.random() * 5;
             new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_length);
         }
+        this.radius -= damage;
+        if(this.radius < 10){
+            this.destroy();
+            return false;
+        }
+        this.damage_x = Math.cos(angle);
+        this.damage_y = Math.sin(angle);
+        this.damage_speed = damage * 80;
+        this.speed *= 0.9;
     }
     get_dist(x1, y1, x2, y2){
         let dx = x1 - x2;
@@ -96,10 +97,13 @@ class Player extends AcGameObject{
     }
     update(){
         this.spent_time += this.timedelta / 1000;
-        if(!this.is_me && this.spent_time > 5 &&  Math.random() < 1 / 180){
+        if(!this.is_me && this.spent_time > 3 &&  Math.random() < 1 / 100){
             let count = this.playground.players.length;
             let player = this.playground.players[Math.floor(Math.random() * count)];
-            this.shoot_fireball(player.x, player.y);
+            //预判player0.5秒后的位置
+            let tx = player.x + player.vx * player.speed * player.timedelta / 1000 * 0.5;
+            let ty = player.y + player.vy * player.speed * player.timedelta / 1000 * 0.5;
+            this.shoot_fireball(tx, ty);
         }
         if(this.damage_speed > this.eps * 100){
             this.vx = this.vy = 0;
@@ -129,5 +133,14 @@ class Player extends AcGameObject{
         this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+    on_destroy(){
+        for(let i = 0;i < this.playground.players.length;i++){
+            let player = this.playground.players[i];
+            if(player == this){
+                this.playground.players.splice(i,1);
+            }
+        }
+        console.log(this.playground.players.length);
     }
 }
