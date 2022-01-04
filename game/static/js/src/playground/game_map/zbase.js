@@ -14,7 +14,7 @@ class GameMap extends AcGameObject{
         this.render();
     }
     render(){
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";      //每帧填充0.2透明黑色，使玩家移动产生渐变效果
         this.ctx.fillRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
     }
 }
