@@ -168,6 +168,7 @@ class Player extends AcGameObject{
         this.is_me = is_me;
         this.eps = 0.1;     //小于这个值就算0
         this.cur_skill = null;
+        this.spent_time = 0;    //冷却期，npc大于这个时间才攻击
     }
 
     start(){
@@ -220,7 +221,7 @@ class Player extends AcGameObject{
         this.damage_x = Math.cos(angle);
         this.damage_y = Math.sin(angle);
         this.damage_speed = damage * 80;
-        this.speed *= 0.8;
+        this.speed *= 0.9;
         for(let i = 0;i < 20 + Math.random() * 10;i++){
             let x = this.x, y = this.y;
             let radius = this.radius * Math.random() * 0.1;
@@ -244,6 +245,12 @@ class Player extends AcGameObject{
         this.vy = Math.sin(angle);
     }
     update(){
+        this.spent_time += this.timedelta / 1000;
+        if(!this.is_me && this.spent_time > 5 &&  Math.random() < 1 / 180){
+            let count = this.playground.players.length;
+            let player = this.playground.players[Math.floor(Math.random() * count)];
+            this.shoot_fireball(player.x, player.y);
+        }
         if(this.damage_speed > this.eps * 100){
             this.vx = this.vy = 0;
             this.move_length = 0;
