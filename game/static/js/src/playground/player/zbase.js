@@ -71,6 +71,16 @@ class Player extends AcGameObject{
         this.damage_y = Math.sin(angle);
         this.damage_speed = damage * 80;
         this.speed *= 0.8;
+        for(let i = 0;i < 20 + Math.random() * 10;i++){
+            let x = this.x, y = this.y;
+            let radius = this.radius * Math.random() * 0.1;
+            let angle = Math.PI * 2 * Math.random();
+            let vx = Math.cos(angle), vy = Math.sin(angle);
+            let color = this.color;
+            let speed = this.speed * 10;
+            let move_length = this.radius * Math.random() * 5;
+            new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_length);
+        }
     }
     get_dist(x1, y1, x2, y2){
         let dx = x1 - x2;
