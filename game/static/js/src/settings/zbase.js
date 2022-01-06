@@ -116,13 +116,84 @@ class Settings {
         this.$login_register.click(function(){
             outer.register();
         });
+        this.$login_submit.click(function() {
+            outer.login_on_remote();
+        });
     }
     add_listening_events_register(){
         let outer = this;
         this.$register_login.click(function(){
             outer.login();
         });
+        this.$register_submit.click(function(){
+            outer.register_on_remote();
+        });
     }
+
+    login_on_remote(){
+        let outer = this;
+        let username = this.$login_username.val();
+        let password = this.$login_password.val();
+        this.$login_error_message.empty();
+
+        $.ajax({
+            url: "https://app190.acapp.acwing.com.cn/settings/login/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+            },
+            success: function(res){
+                console.log(res);
+                if(res.result === "success"){
+                    location.reload();
+                }else{
+                    outer.$login_error_message.html(res.result);
+                }
+            }
+        });
+    }
+    
+    register_on_remote(){
+        let outer = this;
+        let username = this.$register_username.val();
+        let password = this.$register_password.val();
+        let password_confirm = this.$register_password_confirm.val();
+        this.$register_error_message.empty();
+
+        $.ajax({
+            url: "https://app190.acapp.acwing.com.cn/settings/register/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+                password_confirm: password_confirm,
+            },
+            success: function(res){
+                console.log(res);
+                if(res.result === "success"){
+                    location.reload();
+                }else{
+                    outer.$register_error_message.html(res.result);
+                }
+            }
+        });
+    }
+
+    logout_on_remote(){
+        let outer = this;
+
+        $.ajax({
+            url: "https://app190.acapp.acwing.com.cn/settings/logout/",
+            type: "GET",
+            success: function(res){
+                if(res.result === "success"){
+                    location.reload();
+                }
+            }
+        });
+    }
+
     register(){
         this.$login.hide();
         this.$register.show();
