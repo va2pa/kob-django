@@ -106,8 +106,13 @@ class Settings {
         this.start();
     }
     start(){
-        this.getinfo();
-        this.add_listening_events();
+        if(this.platform === "ACAPP"){
+            this.getinfo_acapp();
+        }else{
+            this.getinfo_web();
+            this.add_listening_events();
+        }
+       
     }
     add_listening_events(){
         let outer = this;
@@ -223,7 +228,35 @@ class Settings {
         this.$login.show();
     }
 
-    getinfo(){
+    acapp_login(appid, redirect_uri, scope, state){
+        let outer = this;
+        console.log(222);
+        this.root.acos.api.oauth2.authorize(appid, redirect_uri, scope, state, function(res){
+            console.log(res);
+            if(res.result === "success"){
+                outer.username = res.username;
+                outer.photo = res.photo;
+                outer.hide();
+                outer.root.menu.show();
+            }
+
+        });
+    }
+    getinfo_acapp(){
+        let outer = this;
+        console.log(111);
+        $.ajax({
+            url: "https://app190.acapp.acwing.com.cn/settings/acwing/acapp/apply_code/",
+            type: "GET",
+            success: function(res){
+                console.log(res);
+                if(res.result === "success"){
+                    outer.acapp_login(res.appid, res.redirect_uri, res.scope, res.state);
+                }
+            }
+        });
+    }
+    getinfo_web(){
         let outer = this;
         $.ajax({
             url: "https://app190.acapp.acwing.com.cn/settings/getinfo/",
@@ -233,9 +266,9 @@ class Settings {
             },
             success: function(res){
                 console.log(res);
-                outer.username = res.username;
-                outer.photo = res.photo;
                 if(res.result === "success"){
+                    outer.username = res.username;
+                    outer.photo = res.photo;
                     outer.hide();
                     outer.root.menu.show();
                 }else{
